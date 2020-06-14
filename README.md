@@ -46,6 +46,11 @@ May the bounties come
 
 `$ subfinder -dL domains --silent | gau | ./Zin -c 80 -p <payload>`
 
+
+#### Only Test Parameters
+
+`$ echo "google.com" | waybackurls | grep "&" | ./zin -c 80 -p '"><script>alert(document.domain)</script<"'`
+
 #### Multiple Hosts
 
 `$ cat hosts | gau | ./Zin -c 80 -p <payload>`
