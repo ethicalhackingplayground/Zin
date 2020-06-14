@@ -133,18 +133,18 @@ func runWithMultiplePayload(payloads string) {
  fmt.Println("Status Code\tBytes\t\tURL")
  fmt.Println("-----------\t-----\t\t---\n")
 
- file,err := os.Open(payloads)
- if err != nil {
- 	log.Fatal(err)
- }
-
- defer file.Close()
-
 
  	
  // Create the 'NewScanner' object and print each line in the file
  scanner := bufio.NewScanner(os.Stdin)
  for scanner.Scan() {
+
+	file,err := os.Open(payloads)
+ 	if err != nil {
+        	log.Fatal(err)
+ 	}
+ 	defer file.Close()
+
 
 
  	// Parse the URL
