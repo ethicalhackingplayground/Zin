@@ -145,17 +145,16 @@ func run(payload string) {
 		
 		// Dump the response
 		resp,err := http.Get(scanner.Text())
-		defer resp.Body.Close()
-		if err != nil{
+		if err != nil {
                         log.Fatal(err)
                 }
 
 		dump,err := httputil.DumpResponse(resp, true)
-		if err != nil{
+		if err != nil {
 			log.Fatal(err)
 		}
 		l,err := f.WriteString(string(dump))
-		if err != nil{
+		if err != nil {
                         log.Fatal(err)
                 }
 
