@@ -10,7 +10,8 @@
 
 ### Features
 
-- Injects Payloads into all parameters
+- Inject multiple payloads into all parameters
+- Inject single Payload into all parameters
 - Saves responses into output folder
 - Displays Status Code & Response Length
 - Can grep for patterns in the response
@@ -19,7 +20,6 @@
 
 ### Arguments
 
-```
       _
      (_)
   _____ _ __
@@ -32,15 +32,22 @@ May the bounties come
 
 
   -c int
-        the concurrency (default 20)
+      the concurrency (default 20)
   -p string
-        the payload to be used
+      the payload to be used
+  -pL string
+      the list of payloads to be used
 ```
 
 
 ### Install
 
 `$ git clone https://github.com/ethicalhackingplayground/Zin && cd Zin && go build`
+
+
+
+#### Inject Multiple Payloads
+`$ cat hosts | waybackurls | grep "&" | ./Zin -c 80 -pL <payloadfile>
 
 #### Subdomain Scanning
 
