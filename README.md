@@ -64,13 +64,13 @@ May the bounties come
 
 ##### Grepping for Patterns
 
-`$ cat output/responses.txt | grep --color "Location: evil.com"`
+`$ cat output/responses.txt | grep --Hrie "Location: evil.com"`
 
 ##### Detecting Process
 
-`$ cat output/responses.txt | grep --color "Location: evil.com"`
+`$ cat output/responses.txt | grep -Hrie "Location: evil.com"`
 
-`$ cat output/responses.txt | grep --color "<script>alert(document.domain></script>"`
+`$ cat output/responses.txt | grep -Hrie "<script>alert(document.domain></script>"`
 
 **If you get a bounty please support by buying me a coffee**
 
