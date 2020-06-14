@@ -208,7 +208,7 @@ func runWithMultiplePayload(payloads string) {
         	fmt.Printf("%d Bytes\t", l)
         	fmt.Println(White + "[" + Green + "~" + White + "] " + White + u.String())
         }
-	file.Close()
+	defer file.Close()
         if err := pL.Err(); err != nil {
                 log.Fatal(err)
         }
