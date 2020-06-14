@@ -133,6 +133,12 @@ func runWithMultiplePayload(payloads string) {
  fmt.Println("Status Code\tBytes\t\tURL")
  fmt.Println("-----------\t-----\t\t---\n")
 
+ file,err := os.Open(payloads)
+ if err != nil {
+ 	log.Fatal(err)
+ }
+
+
  	
  // Create the 'NewScanner' object and print each line in the file
  scanner := bufio.NewScanner(os.Stdin)
@@ -147,11 +153,6 @@ func runWithMultiplePayload(payloads string) {
    	// Fetch the URL Values
 	qs := url.Values{}
 
-	file,err := os.Open(payloads)
-	if err != nil {
-		log.Fatal(err)
-	}
-	file.Close()
 
 
 	// Generate a unique UUID for the folder
