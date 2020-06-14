@@ -11,7 +11,7 @@
 ### Features
 
 - Inject multiple payloads into all parameters
-- Inject single Payload into all parameters
+- Inject single payloads into all parameters
 - Saves responses into output folder
 - Displays Status Code & Response Length
 - Can grep for patterns in the response
