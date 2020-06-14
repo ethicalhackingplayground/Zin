@@ -47,7 +47,7 @@ May the bounties come
 
 
 ##### Inject Multiple Payloads
-`$ cat hosts | waybackurls | grep "&" | ./Zin -c 80 -pL <payloadfile>`
+`$ cat hosts | gau | grep "&" | ./Zin -c 80 -pL <payloadfile>`
 
 ##### Subdomain Scanning
 
@@ -56,7 +56,7 @@ May the bounties come
 
 ##### Only Test Parameters
 
-`$ echo "google.com" | waybackurls | grep "&" | ./zin -c 80 -p '"><script>alert(document.domain)</script<"'`
+`$ echo "google.com" | gau | grep "&" | ./zin -c 80 -p '"><script>alert(document.domain)</script<"'`
 
 ##### Multiple Hosts
 
