@@ -151,7 +151,7 @@ func runWithMultiplePayload(payloads string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer file.Close()
+	file.Close()
 
 
 	// Generate a unique UUID for the folder
@@ -187,8 +187,8 @@ func runWithMultiplePayload(payloads string) {
         	log.Fatal(err)
         }
 
-	defer resp.Body.Close()	
-	defer f.Close()
+	resp.Body.Close()	
+	f.Close()
 	pL := bufio.NewScanner(file)
 
         for pL.Scan() {
@@ -282,8 +282,9 @@ func runWithSinglePayload(payload string) {
                         log.Fatal(err)
                 }
 
-		defer resp.Body.Close()
-		defer f.Close()
+		
+		resp.Body.Close()
+		f.Close()
 		// Print the values
 		fmt.Printf("%s\t", resp.StatusCode)
 		fmt.Printf("%d Bytes\t", l)
