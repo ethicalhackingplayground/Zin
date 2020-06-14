@@ -159,6 +159,12 @@ func runWithMultiplePayload(payloads string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	
+	// Create the Unique Folder
+	errDir := os.Mkdir("output/"+uID.String(), 0755)
+	if errDir != nil {
+		log.Fatal(errDir)
+	}	
 
 	// Create the response file
         f,err := os.Create("output/"+uID.String()+"/responses.txt")
@@ -253,6 +259,12 @@ func runWithSinglePayload(payload string) {
         	if err != nil {
                 	log.Fatal(err)
         	}
+
+		// Create the Unique Folder
+        	errDir := os.Mkdir("output/"+uID.String(), 0755)
+		if errDir != nil {
+			log.Fatal(errDir)
+		}
 
 		// Create the response file
                 f,err := os.Create("output/"+uID.String()+"/responses.txt")
