@@ -138,6 +138,8 @@ func runWithMultiplePayload(payloads string) {
  	log.Fatal(err)
  }
 
+ defer file.Close()
+
 
  	
  // Create the 'NewScanner' object and print each line in the file
