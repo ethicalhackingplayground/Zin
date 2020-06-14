@@ -46,27 +46,27 @@ May the bounties come
 
 
 
-#### Inject Multiple Payloads
+##### Inject Multiple Payloads
 `$ cat hosts | waybackurls | grep "&" | ./Zin -c 80 -pL <payloadfile>`
 
-#### Subdomain Scanning
+##### Subdomain Scanning
 
 `$ subfinder -dL domains --silent | gau | ./Zin -c 80 -p <payload>`
 
 
-#### Only Test Parameters
+##### Only Test Parameters
 
 `$ echo "google.com" | waybackurls | grep "&" | ./zin -c 80 -p '"><script>alert(document.domain)</script<"'`
 
-#### Multiple Hosts
+##### Multiple Hosts
 
 `$ cat hosts | gau | ./Zin -c 80 -p <payload>`
 
-#### Grepping for Patterns
+##### Grepping for Patterns
 
 `$ cat output/responses.txt | grep --color "Location: evil.com"`
 
-#### Detecting Process
+##### Detecting Process
 
 `$ cat output/responses.txt | grep --color "Location: evil.com"`
 
