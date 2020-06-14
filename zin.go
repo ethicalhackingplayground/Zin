@@ -158,6 +158,8 @@ func run(payload string) {
                         log.Fatal(err)
                 }
 
+		defer resp.Body.Close()
+
 		// Print the values
 		fmt.Printf("%s\t", resp.StatusCode)
 		fmt.Printf("%d Bytes\t", l)
