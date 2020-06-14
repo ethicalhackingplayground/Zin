@@ -64,7 +64,7 @@ May the bounties come
 
 ##### Grepping for Patterns
 
-`$ cat output/responses.txt | grep --Hrie "Location: evil.com"`
+`$ cat output/responses.txt | grep -Hrie "Location: evil.com"`
 
 ##### Detecting Process
 
