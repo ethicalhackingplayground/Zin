@@ -1,5 +1,5 @@
-# Zin
-A Payload Injector for bugbounties written in go
+## Zin
+**A Payload Injector for bugbounties written in go**
 
 ![alt text](https://upload.wikimedia.org/wikipedia/commons/9/9a/Filled_Syringe_icon.svg)
 ##### Version 1.0
@@ -16,6 +16,9 @@ A Payload Injector for bugbounties written in go
 ### Arguments
 
 [![Image from Gyazo](https://i.gyazo.com/7f93e034cb64df4fd00e445d1e148f0a.gif)](https://gyazo.com/7f93e034cb64df4fd00e445d1e148f0a)
+
+`-c - the conncurency`
+`-p - the payload`
 
 
 ### Install
