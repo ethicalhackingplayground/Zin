@@ -13,7 +13,9 @@ A Payload Injector for bugbounties written in go
 ### Install
 
 `$ go get -v https://github.com/ethicalhackingplayground/Zin`
-**or**
+
+**OR**
+
 `$ git clone https://github.com/ethicalhackingplayground/Zin && cd Zin && go build`
 
 ### Usage
