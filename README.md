@@ -9,7 +9,7 @@ A Payload Injector for bugbounties written in go
 ### Features
 
 - Injects Payloads into all parameters
-- Can grep for patters in the response
+- Can grep for patterns in the response
 - Really fast
 - Easy to setup
 
