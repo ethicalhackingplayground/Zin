@@ -11,7 +11,7 @@
 ### Features
 
 - Injects Payloads into all parameters
-- Saves responses into outfolder
+- Saves responses into output folder
 - Displays Status Code & Response Length
 - Can grep for patterns in the response
 - Really fast
