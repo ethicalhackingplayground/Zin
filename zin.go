@@ -57,8 +57,7 @@ func main() {
 	// Parse the arguments
 	flag.Parse()
 
-	// Print the help 
-	if *payloadPtr == "" {
+	if (*payloadPtr == "" && *payloadsPtr == "") {
 		flag.PrintDefaults()
 		return	
 	}else{
