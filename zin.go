@@ -47,6 +47,9 @@ func init() {
 
 func main() {
 	
+	// Banner
+	banner()
+	
 	// Payload to be used.
 	concurrPtr:= flag.Int("c", 20, "the concurrency")
 	payloadPtr := flag.String("p", "", "the payload to be used")
@@ -59,9 +62,6 @@ func main() {
 		flag.PrintDefaults()
 		return	
 	}
-
-	// Banner
-	banner()
 
 	// Implement Concurrency
 	var wg sync.WaitGroup
