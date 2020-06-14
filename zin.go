@@ -16,6 +16,7 @@ import (
 "net/http"
 "net/http/httputil"
 "runtime"
+"github.com/nu7hatch/gouuid"
 )
 
 
@@ -153,8 +154,14 @@ func runWithMultiplePayload(payloads string) {
 	defer file.Close()
 
 
+	// Generate a unique UUID for the folder
+	uID, err := uuid.NewV4()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// Create the response file
-        f,err := os.Create("output/responses.txt")
+        f,err := os.Create("output/"+uID.String()+"/responses.txt")
         if err != nil {
         	log.Fatal(err)
         }
@@ -241,9 +248,14 @@ func runWithSinglePayload(payload string) {
 		if err != nil {
                         log.Fatal(err)
                 }
+		// Generate a unique UUID for the folder
+        	uID, err := uuid.NewV4()
+        	if err != nil {
+                	log.Fatal(err)
+        	}
 
 		// Create the response file
-                f,err := os.Create("output/responses.txt")
+                f,err := os.Create("output/"+uID.String()+"/responses.txt")
                 if err != nil {
                         log.Fatal(err)
                 }
