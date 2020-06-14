@@ -47,7 +47,7 @@ May the bounties come
 
 
 #### Inject Multiple Payloads
-`$ cat hosts | waybackurls | grep "&" | ./Zin -c 80 -pL <payloadfile>
+`$ cat hosts | waybackurls | grep "&" | ./Zin -c 80 -pL <payloadfile>`
 
 #### Subdomain Scanning
 
