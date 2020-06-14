@@ -15,8 +15,6 @@
 
 ### Arguments
 
-[![Image from Gyazo](https://i.gyazo.com/7f93e034cb64df4fd00e445d1e148f0a.gif)](https://gyazo.com/7f93e034cb64df4fd00e445d1e148f0a)
-
 ```
       _
      (_)
