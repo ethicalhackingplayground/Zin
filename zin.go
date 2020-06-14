@@ -152,21 +152,6 @@ func runWithMultiplePayload(payloads string) {
 	}
 	defer file.Close()
 
-	pL := bufio.NewScanner(file)
-	for pL.Scan() {
-
-
-	   	// Get the url paraemters and set the newvalue (payload)
-   		for param,vv := range u.Query() {
-      			qs.Set(param, vv[0]+pL.Text())
-  		}
-	}
-	if err := pL.Err(); err != nil {
-		log.Fatal(err)
-	}
-
-	// Url encoding the url
-	u.RawQuery = qs.Encode()
 
 	// Create the response file
         f,err := os.Create("output/responses.txt")
@@ -190,10 +175,28 @@ func runWithMultiplePayload(payloads string) {
         }
 
 	defer resp.Body.Close()	
-   	// Print the values
-   	fmt.Printf("%s\t", resp.StatusCode)
-   	fmt.Printf("%d Bytes\t", l)
-   	fmt.Println(White + "[" + Green + "~" + White + "] " + White + u.String())
+
+	pL := bufio.NewScanner(file)
+
+        for pL.Scan() {
+
+
+                // Get the url paraemters and set the newvalue (payload)
+                for param,vv := range u.Query() {
+                        qs.Set(param, vv[0]+pL.Text())
+                }
+
+		// Url encoding the url
+        	u.RawQuery = qs.Encode()
+        	// Print the values
+        	fmt.Printf("%s\t", resp.StatusCode)
+        	fmt.Printf("%d Bytes\t", l)
+        	fmt.Println(White + "[" + Green + "~" + White + "] " + White + u.String())
+        }
+        if err := pL.Err(); err != nil {
+                log.Fatal(err)
+        }
+
  }
  if err := scanner.Err(); err != nil {
    log.Fatal(err)
