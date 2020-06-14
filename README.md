@@ -18,8 +18,21 @@
 [![Image from Gyazo](https://i.gyazo.com/7f93e034cb64df4fd00e445d1e148f0a.gif)](https://gyazo.com/7f93e034cb64df4fd00e445d1e148f0a)
 
 ```
--c - the conncurency
--p - the payload
+      _
+     (_)
+  _____ _ __
+ |_  / | '_ \
+  / /| | | | |
+ /___|_|_| |_|
+
+
+May the bounties come
+
+
+  -c int
+        the concurrency (default 20)
+  -p string
+        the payload to be used
 ```
 
 
