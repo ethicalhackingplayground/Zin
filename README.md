@@ -18,9 +18,6 @@ A Payload Injector for bugbounties written in go
 
 `$ git clone https://github.com/ethicalhackingplayground/Zin && cd Zin && go build`
 
-### Usage
-
-### Scanning Process
 #### Subdomain Scanning
 
 `$ subfinder -dL domains --silent | gau | ./Zin -p <payload>`
