@@ -188,8 +188,8 @@ func runWithMultiplePayload(payloads string) {
         	log.Fatal(err)
         }
 
-	resp.Body.Close()	
-	f.Close()
+	defer resp.Body.Close()	
+	defer f.Close()
 	pL := bufio.NewScanner(file)
 
         for pL.Scan() {
@@ -284,8 +284,8 @@ func runWithSinglePayload(payload string) {
                 }
 
 		
-		resp.Body.Close()
-		f.Close()
+		defer resp.Body.Close()
+		defer f.Close()
 		// Print the values
 		fmt.Printf("%s\t", resp.StatusCode)
 		fmt.Printf("%d Bytes\t", l)
