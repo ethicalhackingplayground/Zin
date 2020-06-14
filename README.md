@@ -4,6 +4,8 @@ A Payload Injector for bugbounties written in go
 ![alt text](https://upload.wikimedia.org/wikipedia/commons/9/9a/Filled_Syringe_icon.svg)
 ##### Version 1.0
 
+[![Image from Gyazo](https://i.gyazo.com/16031ae21e5b98c9c936de492be4cccf.gif)](https://gyazo.com/16031ae21e5b98c9c936de492be4cccf)
+
 ### Features
 
 - Injects Payloads into all parameters
@@ -11,7 +13,10 @@ A Payload Injector for bugbounties written in go
 - Really fast
 - Easy to setup
 
-[![Image from Gyazo](https://i.gyazo.com/16031ae21e5b98c9c936de492be4cccf.gif)](https://gyazo.com/16031ae21e5b98c9c936de492be4cccf)
+### Arguments
+
+[![Image from Gyazo](https://i.gyazo.com/7f93e034cb64df4fd00e445d1e148f0a.gif)](https://gyazo.com/7f93e034cb64df4fd00e445d1e148f0a)
+
 
 ### Install
 
@@ -19,11 +24,11 @@ A Payload Injector for bugbounties written in go
 
 #### Subdomain Scanning
 
-`$ subfinder -dL domains --silent | gau | ./Zin -p <payload>`
+`$ subfinder -dL domains --silent | gau | ./Zin -c 80 -p <payload>`
 
 #### Multiple Hosts
 
-`$ cat hosts | gau | ./Zin -p <payload>`
+`$ cat hosts | gau | ./Zin -c 80 -p <payload>`
 
 #### Grepping for Patterns
 
