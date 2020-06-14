@@ -12,7 +12,6 @@ import (
 "bufio"
 "os"
 "fmt"
-"time"
 "net/url"
 "net/http"
 "net/http/httputil"
@@ -61,19 +60,20 @@ func main() {
 	if *payloadPtr == "" {
 		flag.PrintDefaults()
 		return	
+	}else{
+		// Implement Concurrency
+        	var wg sync.WaitGroup
+        	for i := 0; i < *concurrPtr/2; i++ {
+                	wg.Add(1)
+                	go func() {
+                        	// Run the scanner
+                        	run(*payloadPtr)
+                        	wg.Done()
+               		}()
+                	wg.Wait()
+        	}
 	}
 
-	// Implement Concurrency
-	var wg sync.WaitGroup
-	for i := 0; i < *concurrPtr/2; i++ {
-		wg.Add(1)
-		go func() {
-			// Run the scanner
-        		run(*payloadPtr)
-			wg.Done()
-		}()
-		wg.Wait()
-	}
 }
 
 // Print the banner
@@ -94,8 +94,7 @@ May the bounties come
 
 	`
 	
-	fmt.Println(Red + m1 + Cyan + m2)
-	time.Sleep(2 * time.Second)
+	fmt.Println(Red + m1 + Cyan + m2) 
 }
 
 // Read the file containing the urls from stdin
