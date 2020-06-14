@@ -6,6 +6,7 @@
 package main
 
 import (
+"sync"
 "flag"
 "log"
 "bufio"
@@ -47,6 +48,7 @@ func init() {
 func main() {
 	
 	// Payload to be used.
+	concurrPtr:= flag.Int("c", 20, "the concurrency")
 	payloadPtr := flag.String("p", "", "the payload to be used")
 
 	// Parse the arguments
@@ -61,8 +63,17 @@ func main() {
 	// Banner
 	banner()
 
-	// Run the scanner
-	run(*payloadPtr)
+	// Implement Concurrency
+	var wg sync.WaitGroup
+	for i := 0; i < *concurrPtr/2; i++ {
+		wg.Add(1)
+		go func() {
+			// Run the scanner
+        		run(*payloadPtr)
+			wg.Done()
+		}()
+		wg.Wait()
+	}
 }
 
 // Print the banner
@@ -131,7 +142,7 @@ func run(payload string) {
 		}
 
 		// Url encoding the url
-		u.RawQuery = qs.Encode()
+		//u.RawQuery = qs.Encode()
 		
 		// Dump the response
 		resp,err := http.Get(scanner.Text())
