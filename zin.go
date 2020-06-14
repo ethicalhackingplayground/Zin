@@ -172,6 +172,8 @@ func runWithMultiplePayload(payloads string) {
         	log.Fatal(err)
         }
 
+	defer f.Close()
+
         // Dump the response
         resp,err := http.Get(scanner.Text())
    	if err != nil {
@@ -271,6 +273,8 @@ func runWithSinglePayload(payload string) {
                 if err != nil {
                         log.Fatal(err)
                 }
+
+		defer f.Close()
 
 		dump,err := httputil.DumpResponse(resp, true)
 		if err != nil {
