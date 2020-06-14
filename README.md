@@ -32,11 +32,7 @@ A Payload Injector for bugbounties written in go
 
 #### Detecting Process
 
-**Inject**
-
-`$ subfinder -dL domains --silent | gau | ./Zin -p "///evil.com"`
-
-**Detect**
-
 `$ cat output/responses.txt | grep --color "Location: evil.com"`
+
+`$ cat output/responses.txt | grep --color "<script>alert(document.domain></script>"
 
