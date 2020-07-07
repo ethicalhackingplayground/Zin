@@ -18,6 +18,11 @@
 - Really fast
 - Easy to setup
 
+
+### New Features
+- Pattern Matching in responses
+- Match Status Codes
+
 ### Arguments
 ```
       _
@@ -32,11 +37,16 @@ May the bounties come
 
 
   -c int
-      the concurrency (default 20)
+        the concurrency (default 20)
+  -g string
+        grep the response for any matches
   -p string
-      the payload to be used
+        the payload to be used
   -pL string
-      the list of payloads to be used
+        the list of payloads to be used
+  -s int
+        filter by status codes (default 200)
+        
 ```
 
 
@@ -44,6 +54,14 @@ May the bounties come
 
 `$ git clone https://github.com/ethicalhackingplayground/Zin && cd Zin && go build`
 
+
+
+##### SSRF Example
+`$ subfinder uber.com | gau | grep "=http" | ./Zin -c 80 -p http://10.82.214.84:31386/foobar.js -g "SUP3R_S3cret_1337_K3y"`
+
+##### XSS Example
+
+`$ subfinder uber.com | gau| ./Zin -c 80 -p '"><script>alert(matchforthis)script>' -g "matchforthis"`
 
 
 ##### Inject Multiple Payloads
