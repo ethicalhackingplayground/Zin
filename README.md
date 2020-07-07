@@ -74,21 +74,12 @@ May the bounties come
 
 ##### Only Test Parameters
 
-`$ echo "google.com" | gau | grep "&" | ./Zin -c 80 -p '"><script>alert(document.domain)</script<"'`
+`$ echo "google.com" | gau | grep "&" | ./Zin -c 80 -p '"><script>alert(matchthis)</script<"' -g "matchthis" ` 
 
 ##### Multiple Hosts
 
 `$ cat hosts | gau | ./Zin -c 80 -p <payload>`
 
-##### Grepping for Patterns
-
-`$ cat output/responses.txt | grep -Hrie "Location: evil.com"`
-
-##### Detecting Process
-
-`$ cat output/responses.txt | grep -Hrie "Location: evil.com"`
-
-`$ cat output/responses.txt | grep -Hrie "<script>alert(document.domain></script>"`
 
 **If you get a bounty please support by buying me a coffee**
 
