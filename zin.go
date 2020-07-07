@@ -6,7 +6,9 @@
 package main
 
 import (
+"strings"
 "sync"
+"io/ioutil"
 "flag"
 "log"
 "bufio"
@@ -14,9 +16,7 @@ import (
 "fmt"
 "net/url"
 "net/http"
-"net/http/httputil"
 "runtime"
-"github.com/nu7hatch/gouuid"
 )
 
 
@@ -54,7 +54,8 @@ func main() {
 	concurrPtr:= flag.Int("c", 20, "the concurrency")
 	payloadPtr := flag.String("p", "", "the payload to be used")
 	payloadsPtr := flag.String("pL", "", "the list of payloads to be used")
-
+	statusPtr :=flag.Int("s", 200, "filter by status codes")
+	grepPtr:=flag.String("g", "", "grep the response for any matches")
 	// Parse the arguments
 	flag.Parse()
 
@@ -79,7 +80,7 @@ func main() {
                         	wg.Add(1)
                         	go func() {
                                 	// Run the scanner
-                                	runWithMultiplePayload(*payloadsPtr)
+                                	runWithMultiplePayload(*payloadsPtr, *statusPtr, *grepPtr)
                                 	wg.Done()
                         	}()
                         	wg.Wait()
@@ -92,7 +93,7 @@ func main() {
                	 		wg.Add(1)
                 		go func() {
                         		// Run the scanner
-                        		runWithSinglePayload(*payloadPtr)
+                        		runWithSinglePayload(*payloadPtr, *statusPtr, *grepPtr)
                         		wg.Done()
                			}()
                 		wg.Wait()
@@ -124,7 +125,7 @@ May the bounties come
 
 
 // Read the file containing the urls from stdin
-func runWithMultiplePayload(payloads string) {
+func runWithMultiplePayload(payloads string,  status int, grep string) {
 
  fmt.Println(White + "[" + Blue + "~" + White + "] Searching for URL(s)")
  fmt.Println(White + "[" + Green+ "~" + White + "]" + Red + " Multiple Payloads")
@@ -137,82 +138,60 @@ func runWithMultiplePayload(payloads string) {
  	
  // Create the 'NewScanner' object and print each line in the file
  scanner := bufio.NewScanner(os.Stdin)
+ file,err := os.Open(payloads)
+ client := http.Client{}
+ if err != nil {
+ 	log.Fatal(err)
+ }
  for scanner.Scan() {
-
-	file,err := os.Open(payloads)
- 	if err != nil {
-        	log.Fatal(err)
- 	}
 
 
 
  	// Parse the URL
   	u,err := url.Parse(scanner.Text())
    	if err != nil{
-      		log.Fatal(err)
+      		continue
    	}
    	// Fetch the URL Values
 	qs := url.Values{}
 
+	pS := bufio.NewScanner(file)
+	for pS.Scan() {
+		payload:=pS.Text()
+
+		for param,_ :=range  u.Query() {
+			qs.Set(param, payload)
+		}
+		u.RawQuery=qs.Encode()
 
 
-	// Generate a unique UUID for the folder
-	uID, err := uuid.NewV4()
-	if err != nil {
-		log.Fatal(err)
-	}
+        	// Create a new Request
+        	req,err := http.NewRequest("GET", u.String(), nil)
+   		if err != nil {
+			continue
+       		}
+
+		resp,err:=client.Do(req)
+		if err != nil {
+			continue
+		}
+
+		bytes,err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			continue	
+		}
 	
-	// Create the Unique Folder
-	errDir := os.Mkdir("output/"+uID.String(), 0755)
-	if errDir != nil {
-		log.Fatal(errDir)
-	}	
-
-	// Create the response file
-        f,err := os.Create("output/"+uID.String()+"/responses.txt")
-        if err != nil {
-        	log.Fatal(err)
-        }
-
-        // Dump the response
-        resp,err := http.Get(scanner.Text())
-   	if err != nil {
-      		log.Fatal(err)
-       	}
-
-   	dump,err := httputil.DumpResponse(resp, true)
-   	if err != nil {
-      		log.Fatal(err)
-   	}
-  	l,err := f.WriteString(string(dump))
-   	if err != nil {
-        	log.Fatal(err)
-        }
-
-	defer resp.Body.Close()	
-	defer f.Close()
-	pL := bufio.NewScanner(file)
-
-        for pL.Scan() {
-
-
-                // Get the url paraemters and set the newvalue (payload)
-                for param,vv := range u.Query() {
-                        qs.Set(param, vv[0]+pL.Text())
-                }
-
-		// Url encoding the url
-        	u.RawQuery = qs.Encode()
-        	// Print the values
-        	fmt.Printf("%s\t", resp.StatusCode)
-        	fmt.Printf("%d Bytes\t", l)
-        	fmt.Println(White + "[" + Green + "~" + White + "] " + White + u.String())
-        }
-	defer file.Close()
-        if err := pL.Err(); err != nil {
-                log.Fatal(err)
-        }
-
+		bodyStr:=string(bytes)
+		if (strings.ContainsAny(bodyStr, grep)) {     	
+			if resp.StatusCode == status {		
+	
+                	        // Print the values
+        	                fmt.Printf("%s\t", resp.StatusCode)
+                       	 	fmt.Printf("%d Bytes\t", len(bodyStr))
+                        	fmt.Println(White + "[" + Green + "~" + White + "] " + White + u.String())
+                	}
+		}
+	}
  }
  if err := scanner.Err(); err != nil {
    log.Fatal(err)
@@ -221,7 +200,7 @@ func runWithMultiplePayload(payloads string) {
 
 
 // Read the file containing the urls from stdin
-func runWithSinglePayload(payload string) {
+func runWithSinglePayload(payload string, status int, grep string) {
 
 	fmt.Println(White + "[" + Blue + "~" + White + "] Searching for URL(s)")
 	fmt.Println(White + "[" + Green+ "~" + White + "] Payload: " + payload)
@@ -229,6 +208,8 @@ func runWithSinglePayload(payload string) {
 		
 	fmt.Println("Status Code\tBytes\t\tURL")
 	fmt.Println("-----------\t-----\t\t---\n")
+
+	client:=http.Client{}
 
 	// Create the 'NewScanner' object and print each line in the file
 	scanner := bufio.NewScanner(os.Stdin)
@@ -242,56 +223,45 @@ func runWithSinglePayload(payload string) {
 		}
 		// Fetch the URL Values
 		qs := url.Values{}
-		
 
 		// Get the url paraemters and set the newvalue (payload)
-		for param,vv := range u.Query() {
-			qs.Set(param, vv[0]+payload)
+		for param,_ := range u.Query() {
+			qs.Set(param, payload)
 		}
 
 		// Url encoding the url
 		u.RawQuery = qs.Encode()
-		
-		// Dump the response
-		resp,err := http.Get(scanner.Text())
-		if err != nil {
-                        log.Fatal(err)
-                }
-		// Generate a unique UUID for the folder
-        	uID, err := uuid.NewV4()
+
+
+	        // Create a new Request
+        	req,err := http.NewRequest("GET", u.String(), nil)
         	if err != nil {
-                	log.Fatal(err)
+                	continue
         	}
 
-		// Create the Unique Folder
-        	errDir := os.Mkdir("output/"+uID.String(), 0755)
-		if errDir != nil {
-			log.Fatal(errDir)
-		}
+       		resp,err:=client.Do(req)
+        	if err != nil {
+                	continue
+        	}
 
-		// Create the response file
-                f,err := os.Create("output/"+uID.String()+"/responses.txt")
-                if err != nil {
-                        log.Fatal(err)
-                }
+        	bytes,err := ioutil.ReadAll(resp.Body)
+       	 	if err != nil {
+                	continue
+        	}
+
+        	bodyStr:=string(bytes)
+        	if (strings.ContainsAny(bodyStr, grep)) {
+                	if resp.StatusCode == status {
+
+                        	// Print the values
+                        	fmt.Printf("%s\t", resp.StatusCode)
+                        	fmt.Printf("%d Bytes\t", len(bodyStr))
+                       	 	fmt.Println(White + "[" + Green + "~" + White + "] " + White + u.String())
+                	}
+        	}	
 
 
-		dump,err := httputil.DumpResponse(resp, true)
-		if err != nil {
-			log.Fatal(err)
-		}
-		l,err := f.WriteString(string(dump))
-		if err != nil {
-                        log.Fatal(err)
-                }
 
-		
-		defer resp.Body.Close()
-		defer f.Close()
-		// Print the values
-		fmt.Printf("%s\t", resp.StatusCode)
-		fmt.Printf("%d Bytes\t", l)
-		fmt.Println(White + "[" + Green + "~" + White + "] " + White + u.String()) 
 	}
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)
