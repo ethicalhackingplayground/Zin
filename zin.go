@@ -72,6 +72,14 @@ func main() {
         
 
 		if payloads != "" && payload == "" {
+			fmt.Println(White + "[" + Blue + "~" + White + "] Searching for URL(s)")
+      			fmt.Println(White + "[" + Green+ "~" + White + "]" + Red + " Multiple Payloads")
+        		fmt.Println(White + "[" + Green+ "~" + White + "]" + Red + " Match: " + Green+pattern)
+        		fmt.Println(White + "========================================================================================\n")
+
+        		fmt.Println("\nStatus Code\tBytes\t\tURL")
+        		fmt.Println("-----------\t-----\t\t---\n")
+
 			 // Implement Concurrency
                 	var wg sync.WaitGroup
                	 	for i := 0; i < c; i++ {
@@ -84,6 +92,14 @@ func main() {
                         	wg.Wait()
                 	}
 		}else{
+
+			fmt.Println(White + "[" + Blue + "~" + White + "] Searching for URL(s)")
+        	 	fmt.Println(White + "[" + Green+ "~" + White + "]" + Red + " Payload: " + Cyan + payload)
+        		fmt.Println(White + "[" + Green+ "~" + White + "]" + Red + " Match: " + Green+pattern)
+        		fmt.Println(White + "========================================================================================\n")
+
+        		fmt.Println("\nStatus Code\tBytes\t\tURL")
+        		fmt.Println("-----------\t-----\t\t---\n")
 
 			// Implement Concurrency
         		var wg sync.WaitGroup
@@ -124,15 +140,6 @@ May the bounties come
 
 // Read the file containing the urls from stdin
 func runWithMultiplePayload(payloads string,  status int, grep string, paths string) {
-
-	fmt.Println(White + "[" + Blue + "~" + White + "] Searching for URL(s)")
- 	fmt.Println(White + "[" + Green+ "~" + White + "]" + Red + " Multiple Payloads")
- 	fmt.Println(White + "[" + Green+ "~" + White + "]" + Red + " Match: " + Green+grep)
- 	fmt.Println(White + "========================================================================================\n")
-
- 	fmt.Println("\nStatus Code\tBytes\t\tURL")
- 	fmt.Println("-----------\t-----\t\t---\n")
-
 
  	
  	// Create the 'NewScanner' object and print each line in the file
@@ -230,15 +237,6 @@ func runWithMultiplePayload(payloads string,  status int, grep string, paths str
 
 // Read the file containing the urls from stdin
 func runWithSinglePayload(payload string, status int, grep string, paths string) {
-
-        fmt.Println(White + "[" + Blue + "~" + White + "] Searching for URL(s)")
-        fmt.Println(White + "[" + Green+ "~" + White + "]" + Red + " Payload :" + Cyan + payload)
-        fmt.Println(White + "[" + Green+ "~" + White + "]" + Red + " Match: " + Green+grep)
-        fmt.Println(White + "========================================================================================\n")
-
-        fmt.Println("\nStatus Code\tBytes\t\tURL")
-        fmt.Println("-----------\t-----\t\t---\n")
-
 
 
         // Create the 'NewScanner' object and print each line in the file
