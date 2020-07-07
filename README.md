@@ -25,7 +25,7 @@
 -✅ Match Status Codes
 
 ### Arguments
-**```
+```
       _
      (_)
   _____ _ __
@@ -48,7 +48,7 @@ May the bounties come
   -s int
         filter by status codes (default 200)
         
-```**
+```
 
 
 ## Install
