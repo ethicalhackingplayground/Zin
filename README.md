@@ -25,7 +25,7 @@
 -✅ Match Status Codes
 
 ### Arguments
-```
+**```
       _
      (_)
   _____ _ __
@@ -48,12 +48,12 @@ May the bounties come
   -s int
         filter by status codes (default 200)
         
-```
+```**
 
 
 ## Install
 
-`$ git clone https://github.com/ethicalhackingplayground/Zin && cd Zin && go build`
+**`$ git clone https://github.com/ethicalhackingplayground/Zin && cd Zin && go build`**
 
 
 
