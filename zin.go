@@ -65,7 +65,6 @@ func main() {
 	flag.StringVar(&paths,"paths", "false", "are they just hosts ending in '/'")
 	// Parse the arguments
 	flag.Parse()
-	fmt.Println(pattern)
 	if (payload == "" && payloads == "") {
 		flag.PrintDefaults()
 		return	
