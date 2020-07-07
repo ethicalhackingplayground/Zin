@@ -63,6 +63,8 @@ func main() {
 	flag.StringVar(&pattern, "g", "", "match the response with some string")
 	var paths string
 	flag.StringVar(&paths,"paths", "false", "are they just hosts ending in '/'")
+	var v string
+	flag.StringVar(&v, "only-matches", "true", "print out only matches")
 	// Parse the arguments
 	flag.Parse()
 	if (payload == "" && payloads == "") {
@@ -73,47 +75,47 @@ func main() {
 
 		if payloads != "" && payload == "" {
 			fmt.Println(White + "[" + Blue + "~" + White + "] Searching for URL(s)")
-      			fmt.Println(White + "[" + Green+ "~" + White + "]" + Red + " Multiple Payloads")
-        		fmt.Println(White + "[" + Green+ "~" + White + "]" + Red + " Match: " + Green+pattern)
-        		fmt.Println(White + "========================================================================================\n")
+      		fmt.Println(White + "[" + Green+ "~" + White + "]" + Red + " Multiple Payloads")
+        	fmt.Println(White + "[" + Green+ "~" + White + "]" + Red + " Match: " + Green+pattern)
+        	fmt.Println(White + "========================================================================================\n")
 
-        		fmt.Println("\nStatus Code\tBytes\t\tURL")
-        		fmt.Println("-----------\t-----\t\t---\n")
+        	fmt.Println("\nStatus Code\tBytes\t\tURL")
+        	fmt.Println("-----------\t-----\t\t---\n")
 
-			 // Implement Concurrency
-                	var wg sync.WaitGroup
-               	 	for i := 0; i < c; i++ {
-                        	wg.Add(1)
-                        	go func() {
-                                	// Run the scanner
-                                	runWithMultiplePayload(payloads, statusCode, pattern, paths)
-                                	wg.Done()
-                        	}()
-                        	wg.Wait()
-                	}
+			// Implement Concurrency
+            var wg sync.WaitGroup
+            for i := 0; i < c; i++ {
+                wg.Add(1)
+                go func() {
+                    // Run the scanner
+                    runWithMultiplePayload(payloads, statusCode, pattern, paths, v)
+                    wg.Done()
+                }()
+                wg.Wait()
+            }
 		}else{
 
 			fmt.Println(White + "[" + Blue + "~" + White + "] Searching for URL(s)")
-        	 	fmt.Println(White + "[" + Green+ "~" + White + "]" + Red + " Payload: " + Cyan + payload)
-        		fmt.Println(White + "[" + Green+ "~" + White + "]" + Red + " Match: " + Green+pattern)
-        		fmt.Println(White + "========================================================================================\n")
+        	fmt.Println(White + "[" + Green+ "~" + White + "]" + Red + " Payload: " + Cyan + payload)
+        	fmt.Println(White + "[" + Green+ "~" + White + "]" + Red + " Match: " + Green+pattern)
+        	fmt.Println(White + "========================================================================================\n")
 
-        		fmt.Println("\nStatus Code\tBytes\t\tURL")
-        		fmt.Println("-----------\t-----\t\t---\n")
+        	fmt.Println("\nStatus Code\tBytes\t\tURL")
+        	fmt.Println("-----------\t-----\t\t---\n")
 
 			// Implement Concurrency
-        		var wg sync.WaitGroup
-        		for i := 0; i < c; i++ {
-               	 		wg.Add(1)
-                		go func() {
-                        		// Run the scanner
-                        		runWithSinglePayload(payload, statusCode, pattern, paths)
-                        		wg.Done()
-               			}()
-                		wg.Wait()
-        		}
+        	var wg sync.WaitGroup
+        	for i := 0; i < c; i++ {
+               	wg.Add(1)
+                go func() {
+                    // Run the scanner
+                    runWithSinglePayload(payload, statusCode, pattern, paths, v)
+                    wg.Done()
+               	}()
+				wg.Wait()
 	        }
         }
+	}
 }
 
 // Print the banner
@@ -139,7 +141,7 @@ May the bounties come
 
 
 // Read the file containing the urls from stdin
-func runWithMultiplePayload(payloads string,  status int, grep string, paths string) {
+func runWithMultiplePayload(payloads string,  status int, grep string, paths string, onlymatches string) {
 
  	
  	// Create the 'NewScanner' object and print each line in the file
@@ -149,50 +151,58 @@ func runWithMultiplePayload(payloads string,  status int, grep string, paths str
  	if err != nil {
  		log.Fatal(err)
  	}
- 	for scanner.Scan() {
+	for scanner.Scan() {
 
-                pL := bufio.NewScanner(file)
-                for pL.Scan() {
-                        payload:=pL.Text()
+		pL := bufio.NewScanner(file)
+		for pL.Scan() {
+			payload:=pL.Text()
 
- 		        // Parse the URL
-	  	        u,err := url.Parse(scanner.Text())
-   		        if err != nil {
-      			        continue
-   		        }
-   		        // Fetch the URL Values
-		        qs := url.Values{}
+			// Parse the URL
+			u,err := url.Parse(scanner.Text())
+			if err != nil {
+					continue
+			}
+			// Fetch the URL Values
+			qs := url.Values{}
 
-			
+		
 			if paths == "true" {	
 
 				// Create a new Request
-               		 	req,err := http.NewRequest("GET", u.String()+"/"+payload, nil)
-                		if err != nil {
-                       			continue
-                		}
-	
-       		         	resp,err:=client.Do(req)
-               		 	if err != nil {
-                       		 	continue
-                		}
+				req,err := http.NewRequest("GET", u.String()+"/"+payload, nil)
+				if err != nil {
+					continue
+				}
 
-                		bytes,err := ioutil.ReadAll(resp.Body)
-                		if err != nil {
-                       			continue
-                		}
-	
-	                	bodyStr:=string(bytes)
-	                	if (strings.ContainsAny(bodyStr, grep)) {
-       	              		   	if resp.StatusCode == status {
+				resp,err:=client.Do(req)
+				if err != nil {
+					continue
+				}
 
-                               			// Print the values
-                                		fmt.Printf("%s\t", resp.StatusCode)
-                                		fmt.Printf("%d Bytes\t", len(bodyStr))
-                                		fmt.Println(White + "[" + Green + "~" + White + "] " + White + u.String())
+				bytes,err := ioutil.ReadAll(resp.Body)
+				if err != nil {
+					continue
+				}
+
+				bodyStr:=string(bytes)
+				if (strings.ContainsAny(bodyStr, grep) && onlymatches == "true") {
+					if resp.StatusCode == status && onlymatches == "true"  {
+
+						// Print the values
+						fmt.Printf("%s\t", resp.StatusCode)
+						fmt.Printf("%d Bytes\t", len(bodyStr))
+						fmt.Println(White + "[" + Green + "~" + White + "] " + White + u.String())
 						continue
-                	       	 	}
-                		}			
+					}
+				}else {
+					if onlymatches=="false" {
+						// Print the values
+						fmt.Printf("%s\t", resp.StatusCode)
+						fmt.Printf("%d Bytes\t", len(bodyStr))
+						fmt.Println(White + "[" + Green + "~" + White + "] " + White + u.String())
+						continue
+					}
+				}			
 
 			}else{
 
@@ -202,13 +212,13 @@ func runWithMultiplePayload(payloads string,  status int, grep string, paths str
 				}
 				u.RawQuery=qs.Encode()
 
-	
-        			// Create a new Request
-        			req,err := http.NewRequest("GET", u.String(), nil)
-   				if err != nil {
+
+					// Create a new Request
+					req,err := http.NewRequest("GET", u.String(), nil)
+				if err != nil {
 					continue
-	       			}		
-		
+					}		
+
 				resp,err:=client.Do(req)
 				if err != nil {
 					continue
@@ -220,107 +230,131 @@ func runWithMultiplePayload(payloads string,  status int, grep string, paths str
 				}
 			
 				bodyStr:=string(bytes)
-				if (strings.ContainsAny(bodyStr, grep)) {     	
-					if resp.StatusCode == status {		
-	
-	          	      		        // Print the values
-       		 		                fmt.Printf("%s\t", resp.StatusCode)
-                	       	 		fmt.Printf("%d Bytes\t", len(bodyStr))
-                        			fmt.Println(White + "[" + Green + "~" + White + "] " + White + u.String())
-                			}
-				}	
-			}	
-		}
- 	}
+				if strings.ContainsAny(bodyStr, grep) && onlymatches == "true" {     	
+					
+					if resp.StatusCode == status && onlymatches == "true"{		
+
+						// Print the values
+						fmt.Printf("%s\t", resp.StatusCode)
+						fmt.Printf("%d Bytes\t", len(bodyStr))
+						fmt.Println(White + "[" + Green + "~" + White + "] " + White + u.String())
+					}
+				}else { 
+					
+					if onlymatches == "false" {                                                                                                                                                  
+						fmt.Printf("%s\t", resp.StatusCode)
+						fmt.Printf("%d Bytes\t", len(bodyStr))
+						fmt.Println(White + "[" + Green + "~" + White + "] " + White + u.String())                                                                        
+						continue
+					}
+				}
+			}
+		}	
+	}
 }
 
 
 // Read the file containing the urls from stdin
-func runWithSinglePayload(payload string, status int, grep string, paths string) {
+func runWithSinglePayload(payload string, status int, grep string, paths string, onlymatches string) {
 
 
-        // Create the 'NewScanner' object and print each line in the file
-        scanner := bufio.NewScanner(os.Stdin)
-        client := http.Client{}
-        for scanner.Scan() {
+    // Create the 'NewScanner' object and print each line in the file
+ 	scanner := bufio.NewScanner(os.Stdin)
+ 	client := http.Client{}
+	for scanner.Scan() {
 
-
-                // Parse the URL
-                u,err := url.Parse(scanner.Text())
-                if err != nil {
-                        continue
-                }
-                // Fetch the URL Values
-                qs := url.Values{}
-
-
-                if paths == "true" {
-
-                                // Create a new Request
-                                req,err := http.NewRequest("GET", u.String()+"/"+payload, nil)
-                                if err != nil {
-                                        continue
-                                }
-
-                                resp,err:=client.Do(req)
-                                if err != nil {
-                                        continue
-                                }
-
-                                bytes,err := ioutil.ReadAll(resp.Body)
-                                if err != nil {
-                                        continue
-                                }
-
-                                bodyStr:=string(bytes)
-                                if (strings.ContainsAny(grep, bodyStr)) {
-                                        if resp.StatusCode == status {
-
-                                                // Print the values
-                                                fmt.Printf("%s\t", resp.StatusCode)
-                                                fmt.Printf("%d Bytes\t", len(bodyStr))
-                                                fmt.Println(White + "[" + Green + "~" + White + "] " + White + u.String())
-                                                continue
-                                        }
-                                }
-
-                }else{
-
-
-                                for param,_ :=range  u.Query() {
-                                        qs.Set(param, payload)
-                                }
-                                u.RawQuery=qs.Encode()
-
-
-                                // Create a new Request
-                                req,err := http.NewRequest("GET", u.String(), nil)
-                                if err != nil {
-                                        continue
-                                }
-
-                                resp,err:=client.Do(req)
-                                if err != nil {
-                                        continue
-                                }
-
-                                bytes,err := ioutil.ReadAll(resp.Body)
-                                if err != nil {
-                                        continue
-                                }
-
-                                bodyStr:=string(bytes)
-                                if (strings.ContainsAny(bodyStr, grep)) {
-                                        if resp.StatusCode == status {
-
-                                                // Print the values
-                                                fmt.Printf("%s\t", resp.StatusCode)
-                                                fmt.Printf("%d Bytes\t", len(bodyStr))
-                                                fmt.Println(White + "[" + Green + "~" + White + "] " + White + u.String())
-                                        }
-				}
-			
+		// Parse the URL
+		u,err := url.Parse(scanner.Text())
+		if err != nil {
+				continue
 		}
+		// Fetch the URL Values
+		qs := url.Values{}
+
+	
+		if paths == "true" {	
+
+			// Create a new Request
+			req,err := http.NewRequest("GET", u.String()+"/"+payload, nil)
+			if err != nil {
+				continue
+			}
+
+			resp,err:=client.Do(req)
+			if err != nil {
+				continue
+			}
+
+			bytes,err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				continue
+			}
+
+			bodyStr:=string(bytes)
+			if (strings.ContainsAny(bodyStr, grep) && onlymatches == "true") {
+				if resp.StatusCode == status && onlymatches == "true"  {
+
+					// Print the values
+					fmt.Printf("%s\t", resp.StatusCode)
+					fmt.Printf("%d Bytes\t", len(bodyStr))
+					fmt.Println(White + "[" + Green + "~" + White + "] " + White + u.String())
+					continue
+				}
+			}else {
+				if onlymatches=="false" {
+					// Print the values
+					fmt.Printf("%s\t", resp.StatusCode)
+					fmt.Printf("%d Bytes\t", len(bodyStr))
+					fmt.Println(White + "[" + Green + "~" + White + "] " + White + u.String())
+					continue
+				}
+			}			
+
+		}else{
+
+
+			for param,_ :=range  u.Query() {
+				qs.Set(param, payload)
+			}
+			u.RawQuery=qs.Encode()
+
+
+			// Create a new Request
+			req,err := http.NewRequest("GET", u.String(), nil)
+			if err != nil {
+				continue
+				}		
+
+			resp,err:=client.Do(req)
+			if err != nil {
+				continue
+			}	
+
+			bytes,err := ioutil.ReadAll(resp.Body)
+			if err != nil {
+				continue	
+			}
+		
+			bodyStr:=string(bytes)
+			if strings.ContainsAny(bodyStr, grep) && onlymatches == "true" {     	
+				
+				if resp.StatusCode == status && onlymatches == "true"{		
+
+					// Print the values
+					fmt.Printf("%s\t", resp.StatusCode)
+					fmt.Printf("%d Bytes\t", len(bodyStr))
+					fmt.Println(White + "[" + Green + "~" + White + "] " + White + u.String())
+				}
+			}else { 
+				
+				if onlymatches == "false" {                                                                                                                                                                                                                                                                        // Print the values
+					fmt.Printf("%s\t", resp.StatusCode)
+					fmt.Printf("%d Bytes\t", len(bodyStr))
+					fmt.Println(White + "[" + Green + "~" + White + "] " + White + u.String())                                                                        
+					continue
+				}
+			}
+		}	
 	}
 }
 
