@@ -19,6 +19,11 @@
 - Easy to setup
 
 
+### Install
+
+
+**`$ go get -u github.com/ethicalhackingplayground/Zin`**
+
 ### New Features
 -✅ Pattern Matching in responses 
 
@@ -51,35 +56,30 @@ May the bounties come
 ```
 
 
-## Install
-
-**`$ git clone https://github.com/ethicalhackingplayground/Zin && cd Zin && go build`**
-
-
 
 ### SSRF Example
-**`$ subfinder uber.com | gau | grep "=http" | ./Zin -c 80 -p http://10.82.214.84:31386/foobar.js -g "SUP3R_S3cret_1337_K3y"`**
+**`$ subfinder uber.com | gau | grep "=http" | Zin -c 80 -p http://10.82.214.84:31386/foobar.js -g "SUP3R_S3cret_1337_K3y"`**
 
 ### XSS Example
 
-**`$ subfinder uber.com | gau| ./Zin -c 80 -p '"><script>alert(matchforthis)script>' -g "matchforthis"`**
+**`$ subfinder uber.com | gau| Zin -c 80 -p '"><script>alert(matchforthis)script>' -g "matchforthis"`**
 
 
 ### Inject Multiple Payloads
-**`$ cat hosts | gau | grep "&" | ./Zin -c 80 -pL <payloadfile>`**
+**`$ cat hosts | gau | grep "&" | Zin -c 80 -pL <payloadfile>`**
 
 ### Subdomain Scanning
 
-**`$ subfinder -dL domains --silent | gau | ./Zin -c 80 -p <payload>`**
+**`$ subfinder -dL domains --silent | gau | Zin -c 80 -p <payload>`**
 
 
 ### Only Test Parameters
 
-**`$ echo "google.com" | gau | grep "&" | ./Zin -c 80 -p '"><script>alert(matchthis)</script<"' -g "matchthis" `**
+**`$ echo "google.com" | gau | grep "&" | Zin -c 80 -p '"><script>alert(matchthis)</script<"' -g "matchthis" `**
 
 ### Multiple Hosts
 
-**`$ cat hosts | gau | ./Zin -c 80 -p <payload>`**
+**`$ cat hosts | gau | Zin -c 80 -p <payload>`**
 
 
 **If you get a bounty please support by buying me a coffee**
